@@ -4,7 +4,12 @@
 
 A one-click Google Colab notebook that downloads, installs, and serves [**bosonai/higgs-audio-v3-tts-4b**](https://huggingface.co/bosonai/higgs-audio-v3-tts-4b) behind a public **Gradio** interface — for text-to-speech and zero-shot voice cloning.
 
-> Click the **Open in Colab** badge above, switch to a GPU runtime, then run the cells top to bottom. The final cell prints a public `gradio.live` link.
+> Click the **Open in Colab** badge above, switch to a supported GPU runtime, then run the cells top to bottom. The final cell prints a public `gradio.live` link.
+
+> ## ⛔ GPU requirement — read first
+> Requires an **Ampere-or-newer GPU (compute capability sm_80+)** — **A100 or L4**. sglang ships custom CUDA kernels only for sm_80+, so the **free-tier Colab Tesla T4 (sm_75) will NOT work**: the server loads the model and then crashes with `RMSNorm failed ... no kernel image is available for execution on the device`.
+>
+> On Colab this means **Colab Pro** (`Runtime → Change runtime type → L4 GPU` or `A100 GPU`). Alternatively run on another host — e.g. RunPod with the official `lmsysorg/sglang-omni:dev` image. **Cell 1 hard-stops on an unsupported GPU**, so you won't waste time on a long model load that's doomed to crash.
 
 ---
 
@@ -18,8 +23,8 @@ A one-click Google Colab notebook that downloads, installs, and serves [**bosona
 
 ## Requirements
 
-- A **GPU runtime** (`Runtime → Change runtime type → GPU`).
-- The model is ~5B params (BF16, ≈10 GB weights). **L4 / A100 recommended**; a T4 (16 GB) may work but can be tight.
+- An **Ampere-or-newer GPU (sm_80+)** — **A100 or L4** (Colab Pro). The free **Tesla T4 (sm_75) is not supported** by sglang's kernels; cell 1 will stop with a clear message.
+- The model is ~5B params (BF16, ≈10 GB weights), so the GPU needs ≥16 GB (24 GB+ comfortable). On a tight GPU, see the `EXTRA_SERVE_ARGS` memory flags (`--mem-fraction-static`, `--cpu-offload-gb`) noted in the serve cell.
 - A Hugging Face token is usually **not** required (public repo); paste one if a download fails with an auth error, or store it as a Colab secret named `HF_TOKEN`.
 
 ## Usage
