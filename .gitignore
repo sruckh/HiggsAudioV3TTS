@@ -1,5 +1,6 @@
 # Serena project files
 .serena/
+.kilo/
 
 # Python
 __pycache__/
